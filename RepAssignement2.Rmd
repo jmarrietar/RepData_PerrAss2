@@ -1,0 +1,128 @@
+ U.S. National Oceanic and Atmospheric Administration's (NOAA) Analysis 
+========================================================
+
+### Reproducible Research: Peer Assessment 1
+
+## Synopsis
+Here is going to be cleaned and processed a data base from  U.S. National Oceanic and Atmospheric Administration's (NOAA) ,  the goal is to gain insight about natural  events that occurred from 1950 to 2011, discover which ones cases more injuries and deaths and which ones causes more costs . 
+
+## Data Processing
+Load Data  and set working directory. 
+
+```{r}
+Data <- read.csv(bzfile("C:/Users/JosePortatil/Documents/GitHub/RepData_PerrAss2/repdata-data-StormData.csv.bz2"))
+setwd("C:/Users/JosePortatil/Documents/GitHub/RepData_PerrAss2/")
+```
+
+Load library required 
+
+```{r}
+require(car)
+
+```
+
+Here the major events are going to ve grouped in some categories because there are too much events an its better have bigger groups with more generics names : 
+
+
+```{r}
+Data$EVTYPE<-with(Data,recode(EVTYPE,"  
+                        c('avalanche', 'avalance', 'blizzard', 'chill', 'cold', 'cool', 'glaze', 'hypothermia', 'hyperthermia', 
+'ice', 'icy', 'freez', 'frost', 'low temp', 'sleet', 'snow', 'wint')='COLD / ICE';
+                        c('below normal precip', 'dry', 'drie', 'drought', 'fire', 'heat', 'high temp', 'hot', 'warm')
+='HEAT / DROUGHT / FIRE';
+                        c('fog', 'vog')='FOG';
+                         c('coast', 'cstl', 'current', 'dam fail', 'dam break', 'drizzle', 'drown', 'erosion', 'erosin', 
+'flood', 'floood', 'fld', 'heavy shower', 'high water', 'high waves', 'lake', 'landslump', 'marine', 'precip', 'rain', 
+'rising water', 'river', 'rogue wave', 'slide', 'stream', 'sea', 'seiche', 'surf', 'swell', 'tide', 'tidal', 'torrent', 'wet')='RAIN / FLOOD / HIGH SEAS';
+                      c('burst', 'cloud', 'depression', 'floyd', 'funnel', 'gust', 'hail', 'hurricane', 'landspout', 
+'storm', 'southeast', 'thunderstorm', 'thundertsorm', 'thundestorm', 'tornado', 'torndao', 'tstm', 'turbulence', 'typhoon', 
+'wall', 'waterspout', 'water spout', 'wayterspout', 'wind', 'wnd')
+='WIND / STORM / TORNADO';
+c('lightning', 'ligntning', 'lighting')='LIGHTNING';
+c('tsunami', 'volcan')='VOLCANIC ERUPTION / EARTHQUAKE / TSUNAMI';
+                        c('dust')='DUST'"))
+
+```
+
+
+Group by Event type (EVTYPE) and sum injuries in each category. 
+```{r}
+library(plyr)
+INJURIESSummary<-ddply(Data,~EVTYPE,summarise,sum_INJURIES=sum(INJURIES,na.rm=TRUE))
+```
+
+
+Extract events with injuries higher than 100 
+```{r}
+EventsInjuries<-subset(INJURIESSummary,sum_INJURIES>100)
+```
+
+Order Events by INJURIES
+```{r}
+EventsInjuries <- EventsInjuries[order(EventsInjuries$sum_INJURIES),]
+EventsInjuries
+```
+
+Group by Event type (EVTYPE) and sum Fatalities in each category.
+
+```{r}
+FATALITIESSummary<-ddply(Data,~EVTYPE,summarise,sum_FATALITIES=sum(FATALITIES,na.rm=TRUE))
+```
+
+
+Extract events with fatalities higher than 10
+```{r}
+EventsFATALITIES<-subset(FATALITIESSummary,sum_FATALITIES>10)
+```
+
+Order 
+```{r}
+EventsFATALITIES <- EventsFATALITIES[order(EventsFATALITIES$sum_FATALITIES),]
+EventsFATALITIES
+```
+
+
+Susbet the ones with Billions B (Because the events in Billions of dollars are the ones with biggest costs), then apply GROUP BY , then plot points in billions. 
+
+```{r}
+EventsBillions<-subset(Data,PROPDMGEXP=="B")
+CostSummary<-ddply(EventsBillions,~EVTYPE,summarise,sum_COST=sum(PROPDMG,na.rm=TRUE))
+CostSummary
+```
+
+Order By Cost 
+```{r}
+CostSummary <- CostSummary[order(CostSummary$sum_COST),]
+```
+
+## Results
+
+1. Across the United States, which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health?
+
+Injuries: 
+```{r ,fig.width=6,fig.height=7}
+# Simple Dotplot Injuries 
+dotchart(EventsInjuries$sum_INJURIES,labels=EventsInjuries$EVTYPE,cex=.5,
+         main="Event type Vs Injuries", 
+         xlab="SUm of Injuries caused")
+```
+
+Fatalities: 
+```{r ,fig.width=6,fig.height=7}
+dotchart(EventsFATALITIES$sum_FATALITIES,labels=EventsFATALITIES$EVTYPE,cex=.45,
+         main="Event type Vs Fatalities", 
+         xlab="SUm of Fatalities caused")
+```
+
+ The Tordnado is the most Harmful with the highest Injuries and fatalities followed by excessive heat, flas flood  ... like is showed in this images. 
+ 
+ 
+2. Across the United States, which types of events have the greatest economic consequences?
+
+```{r ,fig.width=6,fig.height=7}
+dotchart(CostSummary$sum_COST,labels=CostSummary $EVTYPE,cex=.5,
+         main="Event type Vs Cost [Billions]", 
+         xlab="Cost in Billions ")
+```
+
+Flood is by far the event woth Greatest economic consequences in Billions of dollars, followed by hurricane and storm surge. 

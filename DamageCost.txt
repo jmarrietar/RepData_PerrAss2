@@ -1,0 +1,36 @@
+Ok, here are a few thoughts on the matter and a proposed strategy. But let me start with a few assumptions.
+
+The entire data set is clearly very messy. Part of this activity is to gain insights from this messy data set, not do a thorough cleaning of the data.
+The instructions state to identify the "...types of events [that] have the greatest economic impact."
+`PROPDMGEXP` is a factor, where K = thousands, M = millions, and B = billions. A number of other levels are also included in this variable which are ambiguously defined. The other levels actually make up a very small percentage of the overall data points, so how we actually treat them in the analysis will likely not make much of a difference.
+If we are looking to identify the types of events that have the greatest economic impact, isn't reasonable to simply look at the events that are estimated in billions of dollars? Of course, some events estimated in millions of dollars could exceed this, but we generally don't see people making estimates in this form. In other words, perhaps the best strategy is to make the simplest and most defensible assumptions. Let's do this first by looking at the number of events that are estimated in billions of dollars.
+
+   
+
+ > length(storms$PROPDMGEXP[storms$PROPDMGEXP == "B"])
+    [1] 40
+
+That number is pretty small, but we actually don't see too many weather related events estimated in billions of dollars, so it doesn't seem unreasonable. Now let's take a look at the actual events that are associated with damage in "billions of dollars." In order to have some confidence in the results, we should see events that are known to produce significant damage. Stated another way, we would expect to see major storms like Hurricanes and Tornadoes to be associated with significant damage, and not see events that are typically considered less severe (e.g., early rain or dry spells). So, this validity issue can be sorted out by looking at the actual events that are associated with damages in billions of dollars:
+
+     
+
+> storms$EVTYPE[storms$PROPDMGEXP == "B"]
+WINTER STORM HURRICANE OPAL/HIGH WINDS HURRICANE OPAL TORNADOES, TSTM WIND, HAIL RIVER FLOOD HEAVY RAIN/SEVERE WEATHER SEVERE THUNDERSTORM FLOOD HURRICANE WILD/FOREST FIRE TROPICAL STORM FLASH FLOOD WILDFIRE HURRICANE/TYPHOON HIGH WIND STORM SURGE STORM SURGE/TIDE HAIL TORNADO
+
+
+
+Now, after looking at this list, I am somewhat confident that I am identifying the events that are associated with the greatest economic impact.
+
+We can then simplify this list further by looking at the actual unique events and perhaps combine some of the levels.
+
+   
+
+ > unique(storms$EVTYPE[storms$PROPDMGEXP == "B"])
+
+Of course, one potential problem with this approach is that less severe events could produce more economic damage through a higher frequency. That may be the case, but the data seem far to messy to address that question. The approach I present seems to be a fairly straightforward way in addressing the actual question -- i.e., which weather-related events are associated with the greatest economic consequences?  The approach also needs to be considered in context of an academic exercise related to "reproducible research," not producing a scientific report that would be used to inform policy.
+
+Critique or thoughts of this approach are welcome and encouraged.
+
+Thanks,
+
+Brian

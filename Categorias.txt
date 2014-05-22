@@ -1,0 +1,15 @@
+1. COLD / ICE = c('avalanche', 'avalance', 'blizzard', 'chill', 'cold', 'cool', 'glaze', 'hypothermia', 'hyperthermia', 'ice', 'icy', 'freez', 'frost', 'low temp', 'sleet', 'snow', 'wint')
+
+2. HEAT / DROUGHT / FIRE = c('below normal precip', 'dry', 'drie', 'drought', 'fire', 'heat', 'high temp', 'hot', 'warm')
+
+3. FOG = c('fog', 'vog')
+
+4. RAIN / FLOOD / HIGH SEAS = c('coast', 'cstl', 'current', 'dam fail', 'dam break', 'drizzle', 'drown', 'erosion', 'erosin', 'flood', 'floood', 'fld', 'heavy shower', 'high water', 'high waves', 'lake', 'landslump', 'marine', 'precip', 'rain','rising water', 'river', 'rogue wave', 'slide', 'stream', 'sea', 'seiche', 'surf', 'swell', 'tide', 'tidal', 'torrent', 'wet')
+
+5. WIND / STORM / TORNADO = c('burst', 'cloud', 'depression', 'floyd', 'funnel', 'gust', 'hail', 'hurricane', 'landspout', 'storm', 'southeast', 'thunderstorm', 'thundertsorm', 'thundestorm', 'tornado', 'torndao', 'tstm', 'turbulence', 'typhoon', 'wall', 'waterspout', 'water spout', 'wayterspout', 'wind', 'wnd')
+
+6. LIGHTNING = c('lightning', 'ligntning', 'lighting')
+
+7. VOLCANIC ERUPTION / EARTHQUAKE / TSUNAMI = c('tsunami', 'volcan')
+
+8. DUST = 'dust'
